@@ -1,8 +1,8 @@
 <?php
-require_once 'pdo.php';
-require_once 'pdo2.php';
-
 session_start();
+
+require_once '../assets/includes/pdo.php';
+
 $script_name = $_SERVER['SCRIPT_NAME'];
 $pattern = "~(/[\w-]+\.php|/)$~";
 $name = '';
@@ -12,26 +12,13 @@ if (preg_match($pattern, $script_name, $matches)) {
 
 
 
-if ($name != "login.php") {
-    if (!isset($_SESSION["food_project_admin_username"])) {
-        header("location:login.php");
-    }
-}
-
-
-if (isset($_POST["logout"])) {
-    session_unset();
-    session_destroy();
-    header("location:login.php");
-}
-
 
 
 ?>
 
 
 <head>
-    <title>Sweetness Delight</title>
+    <title>E-crime</title>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta name="description" content="">

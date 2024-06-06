@@ -8,64 +8,53 @@ $success = "";
 $error = "";
 $id = "";
 
-
-
-$cuppons = $pdo->read("cuppons");
-if (isset($_POST['add_product_btn'])) {
-
-        if (!empty($_POST['cuppon_code']) && !empty($_POST['cuppon_limit']) && !empty($_POST['discount'])
-        && !empty($_POST['expiry'])) {
-            if (!$pdo->isDataInserted("cuppons", ['cuppon_code' => $_POST['cuppon_code']])) {
-                
-                if ($pdo->create("cuppons", ['cuppon_code' => $_POST['cuppon_code'], 'cuppon_limit' => $_POST['cuppon_limit'], 
-                    'discount' => $_POST['discount'], 'expiry' => $_POST['expiry']])) {
-                    $success = "Cuppon added.";
-                                            header("Location:{$name}");
-
+if (isset($_POST['fname'])) { 
+    if (!empty($_POST['address']) && !empty($_POST['fname']) 
+    && !empty($_POST['lname']) && !empty($_POST['dob']) && !empty($_POST['phone'])) {
+        if ($pdo->validateInput($_POST["fname"], "firstname")) {
+            if ($pdo->validateInput($_POST["lname"], "lastname")) {
+                if ($pdo->validateInput($_POST["phone"], "phone")) {
+                    if (!$pdo->isDataInsertedUpdate("users", ['contact' => $_POST['phone']])) {
+                        if ($pdo->update("users", ['id' => $_SESSION['git_uni_police_user_id']], ['first_name' => $_POST['fname'], 
+                        'dob' => $_POST['dob'],
+                        'last_name' => $_POST['lname'], 'address' => $_POST['address'], 
+                        'contact' => $_POST['phone']])) {
+                            $success = "Profile updated";
+                            session_unset();
+                            session_destroy();
+                            header("location:../index.php");
+                            
+                        } else {
+                            $error = "Something went wrong.";
+                            
+                        }
+                    } else {
+                        $error = "Phone number is already registerd.";
+                        
+                    }
+                            
+                    
+                    
                 } else {
-                    $error = "Something went wrong.";
+                    $error = "Phone number is invalid.";
+                    
                 }
                 
+            } else {
+                $error = $pdo->validationErr;
                 
-            } else {
-                $error = "Cuppon already added.";
             }
         } else {
-            $error = "All fields must be filled.";
-           
+            $error = $pdo->validationErr;
+            
         }
+     
+        
+    } else {
+        $error = "All fields are required.";
+        
+    }
     
-} else if (isset($_POST['edit_product_btn'])) {
-    if (!empty($_POST['cuppon_code']) && !empty($_POST['cuppon_limit']) && !empty($_POST['discount'])
-        && !empty($_POST['expiry'])) {
-        if (!$pdo->isDataInsertedUpdate("cuppons", ['cuppon_code' => $_POST['cuppon_code']])) {
-            
-            if ($pdo->update("cuppons", ['id' => $_GET['edit_product']],['cuppon_code' => $_POST['cuppon_code'], 'cuppon_limit' => $_POST['cuppon_limit'], 
-            'discount' => $_POST['discount'], 'expiry' => $_POST['expiry']])) {
-                $success = "Product updated.";
-                                        header("Location:{$name}");
-
-            } else {
-                $error = "Something went wrong. or can't update this because no changes was found";
-            }
-            
-        } else {
-            $error = "Cuppon already added.";
-        }
-    } else {
-        $error = "All fields must be filled.";
-    }
-} else if (isset($_GET['delete_product'])) {
-    if ($pdo->delete("cuppons", $_GET['delete_product'])) {
-        $success = "Product deleted.";
-                              header("Location:{$name}");
-
-    } else {
-        $error = "Something went wrong.";
-    }
-}
-if (isset($_GET['edit_product'])) {
-    $id = $pdo->read("cuppons", ['id' => $_GET['edit_product']]);
 }
 
  
@@ -108,14 +97,14 @@ if (isset($_GET['edit_product'])) {
                         <?php } ?>
                         <div class="page-title-wrapper">
                             <div class="page-title-box">
-                                <h4 class="page-title">Cuppons Form</h4>
+                                <h4 class="page-title">Edit Profile Form</h4>
                             </div>
                             <div class="breadcrumb-list">
                                 <ul>
                                     <li class="breadcrumb-link">
                                         <a href="index.php"><i class="fas fa-home mr-2"></i>Dashboard</a>
                                     </li>
-                                    <li class="breadcrumb-link active">Cuppons</li>
+                                    <li class="breadcrumb-link active">Edit Profile</li>
                                 </ul>
                             </div>
                         </div>
@@ -137,36 +126,30 @@ if (isset($_GET['edit_product'])) {
                                                 <div class="col-md">
 
                                                     <div class="form-group">
-                                                        <label for="cuppon_code" class="col-form-label">Cuppon
-                                                            code</label>
-                                                        <input
-                                                            value="<?php echo isset($_GET['edit_product']) ? $id[0]['cuppon_code'] : null; ?>"
-                                                            class="form-control" name="cuppon_code" type="text"
-                                                            placeholder="Enter Cuppon Code" id="cuppon_code">
+                                                        <label for="fname" class="col-form-label">First name</label>
+                                                        <input value="<?php echo $_SESSION['git_uni_police_fname']; ?>"
+                                                            class="form-control" name="fname" type="text"
+                                                            placeholder="Enter First name" id="fname">
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md">
 
                                                     <div class="form-group">
-                                                        <label for="cuppon_limit" class="col-form-label">Cuppon
-                                                            code limit</label>
-                                                        <input
-                                                            value="<?php echo isset($_GET['edit_product']) ? $id[0]['cuppon_limit'] : null; ?>"
-                                                            class="form-control" name="cuppon_limit" type="number"
-                                                            placeholder="Enter Cuppon Limit" id="cuppon_limit">
+                                                        <label for="lname" class="col-form-label">Last name</label>
+                                                        <input value="<?php echo $_SESSION['git_uni_police_lname']; ?>"
+                                                            class="form-control" name="lname" type="text"
+                                                            placeholder="Enter Last name" id="lname">
                                                     </div>
                                                 </div>
-
 
                                                 <div class="col-md">
 
                                                     <div class="form-group">
-                                                        <label for="discount" class="col-form-label">Discount</label>
-                                                        <input
-                                                            value="<?php echo isset($_GET['edit_product']) ? $id[0]['discount'] : null; ?>"
-                                                            class="form-control" name="discount" type="number"
-                                                            placeholder="Enter Cuppon Discount" id="discount">
+                                                        <label for="phone" class="col-form-label">Phone</label>
+                                                        <input value="<?php echo $_SESSION['git_uni_police_phone']; ?>"
+                                                            class="form-control" name="phone" type="text"
+                                                            placeholder="Enter Phone" id="phone">
                                                     </div>
                                                 </div>
 
@@ -179,82 +162,35 @@ if (isset($_GET['edit_product'])) {
                                                 <div class="col-md">
 
                                                     <div class="form-group">
-                                                        <label for="expiry" class="col-form-label">Cuppon expiry</label>
-                                                        <input
-                                                            value="<?php echo isset($_GET['edit_product']) ? $id[0]['expiry'] : null; ?>"
-                                                            class="form-control" name="expiry" type="date"
-                                                            placeholder="Enter Cuppon expiry" id="expiry">
+                                                        <label for="dob" class="col-form-label">Date of birth</label>
+                                                        <input value="<?php echo $_SESSION['git_uni_police_dob']; ?>"
+                                                            class="form-control" name="dob" type="date"
+                                                            placeholder="Enter Date Of Birth" id="dob">
                                                     </div>
                                                 </div>
 
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md">
+
+                                                    <div class="form-group">
+                                                        <label for="address" class="col-form-label">Date of
+                                                            birth</label>
+                                                        <textarea class="form-control" name="address" rows="10" col="1"
+                                                            placeholder="Enter Address"
+                                                            id="address"><?php echo $_SESSION['git_uni_police_address']; ?></textarea>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md">
                                                     <div class="form-group mb-3">
                                                         <button class="btn btn-primary" type="reset">reset</button>
-                                                        <input
-                                                            name="<?php echo isset($_GET['edit_product']) ? "edit_product_btn" : "add_product_btn"; ?>"
-                                                            class="btn btn-danger" type="submit">
+                                                        <input name="submit" class="btn btn-danger" type="submit">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <table id="example1"
-                                                class="table table-striped table-bordered dt-responsive">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Cuppon code</th>
-                                                        <th>Cuppon Limit</th>
-                                                        <th>Limit used</th>
-                                                        <th>Used By</th>
-                                                        <th>Discount</th>
-                                                        <th>Expiry</th>
 
-                                                        <th>Created at</th>
-                                                        <th>Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                            foreach ($cuppons as $cp) {
-                                                                $user = $pdo->read("users", ['id' => $cp['user_id']]);
-
-                                                                
-
-                                                            ?>
-                                                    <tr>
-                                                        <td><?php echo $cp['id']; ?></td>
-                                                        <td><?php echo $cp['cuppon_code']; ?></td>
-                                                        <td><?php echo $cp['cuppon_limit']; ?></td>
-                                                        <td><?php echo $cp['limit_used']; ?></td>
-
-
-                                                        <td><?php echo !empty($user[0]['username']) ? $user[0]['username'] : "no user haved used this yet."; ?></td>
-                                                        <td><?php echo $cp['discount']; ?>
-                                                        </td>
-                                                        <td><?php echo $cp['expiry']; ?>
-                                                        </td>
-
-                                                        <td><?php echo $cp['createdAt']; ?></td>
-                                                        <td>
-                                                            <a class="text-success"
-                                                                href="cuppons.php?edit_product=<?php echo $cp['id']; ?>">
-                                                                <i class="fa fa-edit"></i>
-                                                            </a>
-                                                            &nbsp;&nbsp;&nbsp;
-                                                            <a class="text-danger"
-                                                                href="cuppons.php?delete_product=<?php echo $cp['id']; ?>">
-                                                                <i class="fa fa-trash"></i>
-                                                            </a>
-                                                        </td>
-
-                                                    </tr>
-                                                    <?php } ?>
-                                                </tbody>
-                                            </table>
-                                            <div class="form-group mb-3">
-
-                                            </div>
                                         </div>
 
                                     </form>

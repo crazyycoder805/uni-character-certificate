@@ -10,37 +10,31 @@ if (isset($_SESSION['git_uni_police_username'])) {
 $success = "";
 $error = "";
 
-if (isset($_POST['username'])) { 
-    if (!empty($_POST['address']) && !empty($_POST['username']) && !empty($_POST['firstname']) 
-    && !empty($_POST['lastname']) && !empty($_POST['email']) && !empty($_POST['dob']) && !empty($_POST['contact_number']) && !empty($_POST['password'])) {
+if (isset($_POST['firstname'])) { 
+    if (!empty($_POST['address']) && !empty($_POST['firstname']) 
+    && !empty($_POST['lastname']) && !empty($_POST['email']) && !empty($_POST['dob']) && !empty($_POST['contact_number'])) {
         if ($pdo->validateInput($_POST["username"], "username")) {
             if ($pdo->validateInput($_POST["firstname"], "firstname")) {
                 if ($pdo->validateInput($_POST["lastname"], "lastname")) {
                     if ($pdo->validateInput($_POST["email"], "email")) {
                         if ($pdo->validateInput($_POST["contact_number"], "phone")) {
-                            if ($pdo->validateInput($_POST["password"], "password")) {
                                 if (!$pdo->isDataInserted("users", ['email' => $_POST['email']])) {
-                                    if (!$pdo->isDataInserted("users", ['username' => $_POST['username']])) {
-                                        if (!$pdo->isDataInserted("users", ['contact' => $_POST['contact_number']])) {
-                                            if ($pdo->create("users", ['username' => $_POST['username'], 
-                                            'password' => $_POST['password'], 'first_name' => $_POST['firstname'], 
-                                            'dob' => $_POST['dob'],
-                                            'email' => $_POST['email'], 'last_name' => $_POST['lastname'], 'address' => $_POST['address'], 
-                                            'contact' => $_POST['contact_number']])) {
-                                                $success = "Account created please sign in to proccess further. <a href='login.php'>Sign in</a>";
-                                            }
-                                        } else {
-                                            $error = "Phone number is already registerd.";
+                                    if (!$pdo->isDataInserted("users", ['contact' => $_POST['contact_number']])) {
+                                        if ($pdo->create("users", ['username' => $_POST['username'], 
+                                        'password' => $_POST['password'], 'first_name' => $_POST['firstname'], 
+                                        'dob' => $_POST['dob'],
+                                        'email' => $_POST['email'], 'last_name' => $_POST['lastname'], 'address' => $_POST['address'], 
+                                        'contact' => $_POST['contact_number']])) {
+                                            $success = "Account created please sign in to proccess further. <a href='login.php'>Sign in</a>";
                                         }
                                     } else {
-                                        $error = "Username is already registerd.";
+                                        $error = "Phone number is already registerd.";
                                     }
+                                   
                                 } else {
                                     $error = "Email is already registerd.";
                                 }
-                            } else {
-                                $error = $pdo->validationErr;
-                            }
+                            
                         } else {
                             $error = $pdo->validationErr;
                         }
@@ -87,10 +81,10 @@ if (isset($_POST['username'])) {
             <div class="bg-layer" style="background-image: url(assets/images/police/5.jpg);"></div>
             <div class="auto-container">
                 <div class="content-box">
-                    <h1>Signup</h1>
+                    <h1>Character Certificate</h1>
                     <ul class="bread-crumb clearfix">
                         <li><a href="index-2.html">Home</a></li>
-                        <li>Signup</li>
+                        <li>Character Certificate</li>
                     </ul>
                 </div>
             </div>
@@ -124,8 +118,7 @@ if (isset($_POST['username'])) {
 
                     <div class="col-md form-column">
                         <div class="form-inner">
-                            <form method="post"
-                                id="contact-form">
+                            <form method="post" id="contact-form">
                                 <div class="row clearfix">
                                     <div class="col-md left-column">
                                         <div class="form-group">
@@ -182,35 +175,14 @@ if (isset($_POST['username'])) {
 
                                 </div>
                                 <div class="row clearfix">
-                                    <div class="col-md left-column">
-                                        <div class="form-group">
-                                            <label>Username</label>
-                                            <input type="text" id="username" name="username" required="">
-                                        </div>
 
-                                    </div>
-                                    <div class="col-md left-column">
-                                        <div class="form-group">
-                                            <label>Password</label>
-                                            <input type="text" id="password" name="password" required="">
-                                        </div>
-
-                                    </div>
                                     <div class="col-lg-12 col-md-12 col-sm-12 form-group message-btn">
                                         <button class="theme-btn btn-one" type="submit"
-                                            name="submit-form">Signup</button>
+                                            name="submit-form">Generate</button>
                                     </div>
                                 </div>
                                 <br />
-                                <div class="row clearfix">
-                                    <div class="col-md left-column">
-                                        <div class="form-group">
-                                            <a href="login.php">Already have a account? Login.</a>
-                                        </div>
-
-                                    </div>
-
-                                </div>
+                               
                             </form>
                         </div>
                     </div>

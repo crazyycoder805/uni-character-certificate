@@ -24,6 +24,8 @@ if (isset($_POST['username'])) {
             $_SESSION['git_uni_police_lname'] = $user[0]['last_name'];
             $_SESSION['git_uni_police_phone'] = $user[0]['contact'];
             $_SESSION['git_uni_police_address'] = $user[0]['address'];
+            $_SESSION['git_uni_police_dob'] = $user[0]['dob'];
+
            header("location:index.php");
         } else {
             $error = "User doesn't exsit";

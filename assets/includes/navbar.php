@@ -11,8 +11,14 @@
                     <li><i class="icon-3 gradient-color"></i>Open Hours: Mon - Fri 8.00 am - 6.00 pm</li>
                 </ul>
                 <div class="top-right">
-                    <div class="login-box"><a href="index.php"><i class="icon-4 gradient-color"></i> Login</a></div>
+                    <?php 
+                                if (!isset($_SESSION['git_uni_police_username'])) {
+                                ?>
+                    <div class="login-box"><a href="login.php"><i class="icon-4 gradient-color"></i> Login</a></div>
+                    <?php }else { ?>
+                    <div class="login-box"><a href="userpanel/"><i class="icon-4 gradient-color"></i> My Panel</a></div>
 
+                    <?php } ?>
                 </div>
             </div>
         </div>
@@ -38,6 +44,19 @@
                                 <li><a href="index.php">Home</a></li>
 
                                 <li><a href="about.php">About Us</a></li>
+
+                                <li><a href="contact.php">Special Reuquest</a></li>
+                                <?php 
+                                if (isset($_SESSION['git_uni_police_username'])) {
+                                ?>
+                                <li><a href="cc.php">Character Certificate</a></li>
+                                <?php } ?>
+                                <?php 
+                                if (isset($_SESSION['git_uni_police_username'])) {
+                                ?>
+                                <li><a href="index.php?logout">Logout</a></li>
+
+                                <?php }  else {?>
                                 <li class="dropdown"><a href="#">Access</a>
                                     <ul>
                                         <li><a href="login.php">Login</a></li>
@@ -45,8 +64,7 @@
 
                                     </ul>
                                 </li>
-                                <li><a href="contact.php">Contact</a></li>
-                                <li><a href="cc.php">Character Certificate</a></li>
+                                <?php } ?>
                             </ul>
                         </div>
                     </nav>

@@ -29,7 +29,7 @@
             $fetch_districts = mysqli_query($connection, "SELECT * FROM districts");
             $count_districts = mysqli_num_rows($fetch_districts);
 
-            $fetch_companies = mysqli_query($connection, "SELECT * FROM certificates");
+            $fetch_companies = mysqli_query($connection, "SELECT * FROM charactercertificate");
             $count_certificates = mysqli_num_rows($fetch_companies);
 
             $fetch_jobseekers = mysqli_query($connection, "SELECT * FROM contact_messages");

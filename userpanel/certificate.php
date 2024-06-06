@@ -8,18 +8,9 @@ $success = "";
 $error = "";
 $id = "";
 
-$reviews = $pdo->read("reviews");
+$certificate = $pdo->read("charactercertificate", ['user_id' => $_SESSION['git_uni_police_user_id']]);
 
 
- if (isset($_GET['delete_category'])) {
-    if ($pdo->delete("reviews", $_GET['delete_category'])) {
-        $success = "Review deleted.";
-                              header("Location:{$name}");
-
-    } else {
-        $error = "Something went wrong.";
-    }
-}
 
 
  
@@ -62,14 +53,14 @@ $reviews = $pdo->read("reviews");
                         <?php } ?>
                         <div class="page-title-wrapper">
                             <div class="page-title-box">
-                                <h4 class="page-title">Reviews</h4>
+                                <h4 class="page-title">Certificate</h4>
                             </div>
                             <div class="breadcrumb-list">
                                 <ul>
                                     <li class="breadcrumb-link">
                                         <a href="index.php"><i class="fas fa-home mr-2"></i>Dashboard</a>
                                     </li>
-                                    <li class="breadcrumb-link active">Reviews</li>
+                                    <li class="breadcrumb-link active">Certificate</li>
                                 </ul>
                             </div>
                         </div>
@@ -86,42 +77,45 @@ $reviews = $pdo->read("reviews");
                                     <table id="example1" class="table table-striped table-bordered dt-responsive">
                                         <thead>
                                             <tr>
-                                                <th>#</th>
-                                                <th>User</th>
-                                                <th>Stars</th>
-                                                <th>On Product</th>
-                                                <th>Review</th>
+                                                <th>Full name</th>
+                                                <th>Date of birth</th>
+                                                <th>Address</th>
+                                                <th>Phone</th>
 
-                                                <th>Created at</th>
+                                                <th>Email</th>
+                                                <th>RFC</th>
+                                                <th>Application date</th>
+                                                <th>Issued date</th>
+                                                <th>Status</th>
                                                 <th>Actions</th>
+
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php
-                                                            foreach ($reviews as $rv) {
-                                                                $user = $pdo->read("users", ['id' => $rv['user_id']]);
-                                                                $food = $pdo->read("food", ['id' => $rv['food_id']]);
 
-                                                                
-
-                                                            ?>
                                             <tr>
-                                                <td><?php echo $rv['id']; ?></td>
-                                                <td><?php echo !empty($user[0]['username']) ? $user[0]['username'] : "unkown user"; ?>
+                                                <td><?php echo $certificate[0]['full_name']; ?>
                                                 </td>
-                                                <td><?php echo $rv['stars']; ?></td>
-                                                <td><?php echo $food[0]['food_name']; ?></td>
-                                                <td><?php echo $rv['described']; ?></td>
-                                                <td><?php echo $rv['createdAt']; ?></td>
+                                                <td><?php echo $certificate[0]['date_of_birth']; ?></td>
+                                                <td><?php echo $certificate[0]['address']; ?></td>
+                                                <td><?php echo $certificate[0]['contact_number']; ?></td>
+                                                <td><?php echo $certificate[0]['email']; ?></td>
                                                 <td>
-                                                    
-                                                    <a class="text-danger"
-                                                        href="reviews.php?delete_category=<?php echo $rv['id']; ?>">
-                                                        <i class="fa fa-trash"></i>
-                                                    </a>
+                                                    <?php echo $certificate[0]['reason_for_certificate']; ?>
+                                                </td>
+                                                <td><?php echo $certificate[0]['application_date']; ?></td>
+                                                <td> <?php echo $certificate[0]['certificate_issued_date']; ?>
+                                                </td>
+                                                <td> <?php echo $certificate[0]['status']; ?>
+                                                </td>
+                                                <td> <?php if ($certificate[0]['status'] != "Pending") { ?>
+                                                    <a target="_blank"
+                                                        href="../cc-view.php?i=<?php echo $certificate[0]['user_id']; ?>">Print certficate</a>
+                                                    <?php } else { ?>
+                                                    NULL
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
-                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>

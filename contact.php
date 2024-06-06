@@ -3,6 +3,33 @@
 <?php 
 require_once 'assets/includes/head.php';
 ?>
+
+<?php 
+$success = "";
+$error = "";
+if (!empty($_POST['name']) && !empty($_POST['email'])
+&& !empty($_POST['phone']) && !empty($_POST['mesage'])) {
+    if ($pdo->validateInput($_POST['email'], 'email')) {
+        if ($pdo->validateInput($_POST['phone'], 'phone')) {
+            if ($pdo->create("contact_messages", ['name' => $_POST['name']
+            , 'email' => $_POST['email'], 
+            'phone' => $_POST['phone'], 
+            'message' => $_POST['message_contact']])) {
+                $success = 'Message has been sent, we will soon contact you.';
+                $pdo->headTo("index.php", 3000);
+            } else {
+                $error = "Something went wrong.";
+            }
+        } else {
+            $error = 'Invalid phone number format.';
+        }
+    } else {
+        $error = 'Invalid email format.';
+    }
+} else {
+    $error = "All fields are required.";
+}
+?>
 <!-- page wrapper -->
 
 <body>
@@ -41,6 +68,24 @@ require_once 'assets/includes/head.php';
         <section class="contact-style-two sec-pad-2">
             <div class="bg-layer" style="background-image: url(assets/images/background/contact-bg.jpg);"></div>
             <div class="auto-container">
+                <div class="row">
+                    <div class="col-md">
+                        <?php
+                        if (!empty($success)) {
+                        ?>
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <button type="button" class="close" data-bs-dismiss="alert">&times;</button>
+                            <?php echo $success; ?>
+                        </div>
+                        <?php } else if (!empty($error)) { ?>
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <button type="button" class="close" data-bs-dismiss="alert">&times;</button>
+                            <?php if(is_string($error)){ echo $error;} else { foreach($error as $err){ echo $err . "<br />";}} ?>
+                        </div>
+
+                        <?php } ?>
+                    </div>
+                </div>
                 <div class="row clearfix">
                     <div class="col-lg-5 col-md-12 col-sm-12 content-column">
                         <div class="content_block_seven">
@@ -80,7 +125,9 @@ require_once 'assets/includes/head.php';
                                                 <div class="icon-box"><img src="assets/images/icons/icon-17.svg" alt="">
                                                 </div>
                                                 <h5>Email:</h5>
-                                                <p><a href="mailto:info@policeverification.com">info@policeverification.com</a></p>
+                                                <p><a
+                                                        href="mailto:info@policeverification.com">info@policeverification.com</a>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -97,7 +144,7 @@ require_once 'assets/includes/head.php';
                                     <div class="col-lg-6 col-md-6 col-sm-12 left-column">
                                         <div class="form-group">
                                             <label>Your Name</label>
-                                            <input type="text" name="username" required="">
+                                            <input type="text" name="name" required="">
                                         </div>
                                         <div class="form-group">
                                             <label>Your Email</label>

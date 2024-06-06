@@ -5,6 +5,14 @@
 require_once 'assets/includes/head.php';
 ?>
 
+<?php 
+if (isset($_GET['logout'])) {
+    session_unset();
+    session_destroy();
+    header("location:index.php");
+}
+?>
+
 
 <!-- page wrapper -->
 
